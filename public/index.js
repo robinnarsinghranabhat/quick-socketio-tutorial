@@ -38,3 +38,10 @@ sio.on('client_count', (count) => {
 sio.on('room_count', (count) => {
   console.log('There are ' + count + ' connected clients in Room ');
 });
+
+sio.on('user_joined', (username) => {
+  console.log('Username ' + username + ' joined ');
+});
+sio.on('user_left', (username) => {
+  console.log('Username ' + username + ' left ');
+});

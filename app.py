@@ -2,6 +2,7 @@ import socketio
 import random
 
 sio = socketio.Server()
+sio.session
 app = socketio.WSGIApp(sio, static_files={
     '/': './public/'
 })
@@ -32,6 +33,16 @@ def connect(sid, environ):
     username = environ.get('HTTP_X_USERNAME')
     if not username:
         return False
+
+    # Saving the username information in a dictionairy.
+    # So that when disconnected, we can broadcaset name of user that disconnected.
+    # On the Implementation side, since server is holding 
+    # information for each connected client. it must be
+    # maintaing information for all of of those users.
+
+    with sio.session(sid) as session:
+        session['username'] = username 
+    sio.emit('user_joined', username)
     client_count += 1
     print(sid, 'connected')
     sio.start_background_task(task, sid)
@@ -51,6 +62,9 @@ def disconnect(sid):
     global client_count, room_count_a, room_count_b
     client_count -= 1
     print(sid, 'disconnected')
+    with sio.session(sid) as session:
+        sio.emit('user_left', session['username'])
+
     sio.emit('client_count', client_count)
     if 'a' in sio.rooms(sid):
         room_count_a -= 1

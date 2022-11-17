@@ -3,6 +3,9 @@ Tutorial. I merely added some notes for myself.
 https://github.com/miguelgrinberg/quick-socketio-tutorial
 =====================================================
 
+## User Session
+socketio will keep track of user-information for each of the connected clients.
+
 
 ## SERVING THE APPLICATION
 - ### Synchronous Server 
