@@ -1,4 +1,13 @@
-const sio = io();
+const sio = io({
+  transportOptions : {
+    polling : {
+      extraHeaders: {
+        'X-username':window.location.hash.substring(1)
+      }
+    }
+  }
+}
+);
 
 sio.on('connect', () => {
   console.log('connected');

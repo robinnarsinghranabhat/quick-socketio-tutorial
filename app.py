@@ -19,11 +19,19 @@ def task(sid):
 @sio.event
 def connect(sid, environ):
     """
+    Connect Event-Handler receives environ dictionairy (as per WSGI spec) as 
+    the argument. So we have access to cookies, headers. So we can authenticate
+    users using this.  
     As new clients Join in, We notify total uses to everyone.
     We also notify clients about know total clients in their room. But not about 
     other rooms.
     """
+
     global client_count, room_count_a, room_count_b
+
+    username = environ.get('HTTP_X_USERNAME')
+    if not username:
+        return False
     client_count += 1
     print(sid, 'connected')
     sio.start_background_task(task, sid)
